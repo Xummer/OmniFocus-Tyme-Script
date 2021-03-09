@@ -5,36 +5,38 @@
 from urllib.request import quote
 import webbrowser
 
-with open("/Users/zdong1995/Desktop/Tasks.taskpaper") as f:
+with open("/Users/xummer/Desktop/Tasks.taskpaper") as f:
     files = f.readlines()
 
 i = 0
 
 def get_content(cur):
     j = len(cur) - 1
-    while cur[j] is not " ":
+    while cur[j] != " ":
         j -= 1
     time = cur[j+1:-1] # ignore '\n'
     task = cur[:j]
     return task + " @estimate(" + time + ")\n"
 
 while i < len(files):
-    if files[i] is '\n':
+    if files[i] == '\n':
         i += 1
     # find one project line starting from
-    projectName = quote(files[i][:-2]) # need to remove the ':\n' at the end of project line
+    projectName = files[i][:-2] # need to remove the ':\n' at the end of project line
     i += 1
-    content = ''
-    while i < len(files) and not (files[i] is '\n' or files[i][0].isalpha()):
+    content = "- " + projectName + "\n"
+    insertSpace = "    " # 4 spaces
+    while i < len(files) and not (files[i] == '\n' or files[i][0].isalpha()):
         cur = files[i]
-        if cur[-2] is "h": # task
-            content += get_content(cur)
+        if cur[-2] == "h": # task
+            content += insertSpace + get_content(cur)
         else: # subproject
-            content += cur
+            content += insertSpace + cur
 
         i += 1
+    print(projectName)
     print(content)
-    url = "omnifocus:///paste?target=/task/" + projectName +  "&content=" + quote(content)
+    url = "omnifocus:///paste?target=projects&content=" + quote(content)
     print(url)
     webbrowser.open(url)
 
