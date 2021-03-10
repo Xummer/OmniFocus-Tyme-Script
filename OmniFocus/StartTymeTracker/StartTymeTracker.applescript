@@ -12,8 +12,35 @@ tell application "OmniFocus"
 	end tell
 	
 	tell application "Tyme"
-		set tsk to the first item of (every task of every project whose name = tskName)
-		set tskId to id of tsk
-		StartTrackerForTaskID tskId
+
+		-- cehck if task is already exsit
+		try
+			set tsk to the first item of (every task of every project whose name = tskName)
+		on error errMsg
+			set tsk to missing value
+		end try
+
+		-- try to generate project or task
+		if tsk is missing value then
+			-- Getting path to this file 
+			tell application "Finder"
+				get container of (path to me) as Unicode text 
+				set currentLocation to result
+			end tell
+
+			run script file (currentLocation & "omni2tyme.applescript")
+
+			-- check if task is generated
+			try
+				set tsk to the first item of (every task of every project whose name = tskName)
+			on error errMsg
+				set tsk to missing value
+			end try
+		end if
+
+		if tsk is not missing value then
+			set tskId to id of tsk
+			StartTrackerForTaskID tskId
+		end if
 	end tell
 end tell
