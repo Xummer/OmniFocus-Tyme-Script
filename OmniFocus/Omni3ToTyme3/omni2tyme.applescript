@@ -50,9 +50,9 @@ on tell_tyme(my_selection)
 				
 				if (make_new_task) then
 					if (havedue is true) then
-						make new task of (project proj_name) with properties {name:task_name, taskType:"timed", timedRoundingMinutes:esti, dueDate:due}
+						make new task of (project proj_name) with properties {name:task_name, taskType:"timed", dueDate:due}
 					else
-						make new task of (project proj_name) with properties {name:task_name, taskType:"timed", timedRoundingMinutes:esti}
+						make new task of (project proj_name) with properties {name:task_name, taskType:"timed"}
 					end if
 				end if
 			end tell
